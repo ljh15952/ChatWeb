@@ -40,6 +40,21 @@ app.get("/messages", (req, res) => {
     });
 });
 
+// ✅ 메시지 추가 API
+app.post("/messages", (req, res) => {
+    const { username, message } = req.body;
+    if (!username || !message) {
+        return res.status(400).json({ error: "username과 message는 필수입니다." });
+    }
+
+    const sql = "INSERT INTO messages (username, message) VALUES (?, ?)";
+    db.query(sql, [username, message], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: "데이터 삽입 실패" });
+        }
+        res.status(200).json({ message: "메시지가 성공적으로 추가되었습니다!" });
+    });
+});
 
 // 서버 실행
 app.listen(3000, () => {

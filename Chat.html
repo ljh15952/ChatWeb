@@ -9,10 +9,49 @@
 
 <body>
     <h1>MySQL 데이터</h1>
+
+    <h1>메시지 입력</h1>
+
+    <form id="message-form">
+        <label for="username">사용자 이름:</label>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="message">메시지:</label>
+        <textarea id="message" name="message" required></textarea><br>
+
+        <button type="submit">메시지 보내기</button>
+    </form>
+
     <button onclick="fetchData()">데이터 가져오기</button>
     <ul id="user-list"></ul>
 
     <script>
+        document.getElementById('message-form').addEventListener('submit', function (event) {
+            event.preventDefault();  // 기본 제출 동작 막기
+
+            const username = document.getElementById('username').value;
+            const message = document.getElementById('message').value;
+
+            // 서버로 데이터 전송
+            fetch("http://localhost:3000/messages", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, message })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);  // 성공 메시지 표시
+                    document.getElementById('message-form').reset();  // 폼 초기화
+                })
+                .catch(error => {
+                    console.error("데이터 전송 실패:", error);
+                    alert("메시지 전송 실패");
+                });
+        });
+
+
         function fetchData() {
             fetch("http://localhost:3000/messages")  // 백엔드 서버에 요청
                 .then(response => response.json())
