@@ -8,7 +8,7 @@ app.use(cors());  // CORS 허용
 
 // MySQL 연결
 const db = mysql.createConnection({
-    host: "localhost",
+    host: "3.35.204.105",
     user: "root",
     password: "1234",
     database: "chat",
@@ -58,5 +58,5 @@ app.post("/messages", (req, res) => {
 
 // 서버 실행
 app.listen(3000, () => {
-    console.log("서버 실행 중: http://localhost:3000");
+    console.log("서버 실행 중: http://3.35.204.105:3306");
 });
