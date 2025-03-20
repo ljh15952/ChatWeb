@@ -23,8 +23,10 @@ db.connect((err) => {
 });
 
 // 루트 경로 추가
+const path = require('path');
+app.use(express.static(path.join(__dirname)));
 app.get("/", (req, res) => {
-    res.send("서버가 정상적으로 실행 중입니다!");
+    res.sendFile(path.join(__dirname, 'Chat.html'));
 });
 
 

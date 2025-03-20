@@ -1,0 +1,23 @@
+{
+  "name": "chatweb",
+  "version": "1.0.0",
+  "description": "웹 채팅 vs ssh 연결 성공",
+  "main": "src.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljh15952/ChatWeb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ljh15952/ChatWeb/issues"
+  },
+  "homepage": "https://github.com/ljh15952/ChatWeb#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
