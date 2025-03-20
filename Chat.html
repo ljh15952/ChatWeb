@@ -54,7 +54,7 @@
 
 
         function fetchData() {
-            fetch("http://3.35.204.105:3000/messages")  // 백엔드 서버에 요청
+            fetch("http://3.35.204.105:3000/getmessages")  // 백엔드 서버에 요청
                 .then(response => response.json())
                 .then(data => {
                     const list = document.getElementById("user-list");

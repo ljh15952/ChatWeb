@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 
 
 // 데이터 조회 API
-app.get("/messages", (req, res) => {
+app.get("/getmessages", (req, res) => {
     const sql = "SELECT * FROM messages ORDER BY created_at DESC";
     db.query(sql, (err, results) => {
         if (err) {
