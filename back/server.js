@@ -58,6 +58,18 @@ app.post("/messages", (req, res) => {
     });
 });
 
+// 데이터 조회 API (최신 메시지 1개만 가져오기)
+app.get("/getlatestmessage", (req, res) => {
+    const sql = "SELECT * FROM messages ORDER BY created_at DESC LIMIT 1";  // 최신 메시지 한 개만 조회
+    db.query(sql, (err, results) => {
+        if (err) {
+            res.status(500).json({ error: "데이터 조회 실패" });
+        } else {
+            res.json(results[0]);  // 가장 최신 메시지를 반환
+        }
+    });
+});
+
 // 서버 실행
 app.listen(3000, () => {
     console.log("서버 실행 중: http://3.35.204.105:3000");

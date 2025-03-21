@@ -1,5 +1,4 @@
 let me = "익명" + Math.random().toString(36).substring(2, 8);  // 36진법을 사용하여 짧은 문자열을 생성
-document.getElementById("chat-box").scrollTop = document.getElementById("chat-box").scrollHeight
 
 document.getElementById('message-input').addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
@@ -11,6 +10,11 @@ document.getElementById('message-input').addEventListener('keydown', (event) => 
 document.getElementById("theme-toggle").addEventListener("click", function () {
     document.body.classList.toggle("dark-mode");
 });
+
+function updateChatBoxLine() {
+    const chatBox = document.getElementById("chat-box");
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
 function sendMessage() {
     const username = me;
@@ -35,20 +39,46 @@ function sendMessage() {
     document.getElementById('message-input').value = '';
 }
 
-function fetchData() {
+function initChatBox() {
     fetch("http://3.35.204.105:3000/getmessages")  // 백엔드 서버에 요청
         .then(response => response.json())
         .then(data => {
             const chatBox = document.getElementById("chat-box");
-            chatBox.innerHTML = "";  // 기존 리스트 초기화
-
             data.reverse().forEach(message => {
                 const messageDiv = document.createElement("div");
                 messageDiv.textContent = `${message.username} : ${message.message} ---- (${new Date(message.created_at).toLocaleString()})`;
                 chatBox.appendChild(messageDiv);
             });
-            chatBox.scrollTop = chatBox.scrollHeight;
+        })
+        .catch(error => console.error("데이터 가져오기 오류:", error));
+    fetch("http://3.35.204.105:3000/getlatestmessage")
+        .then(response => response.json())
+        .then(message => {
+            lastFetchedTime = new Date(message.created_at);
+        })
+}
+
+let lastFetchedTime = null;
+function fetchLatestMessage() {
+    fetch("http://3.35.204.105:3000/getlatestmessage")  // 서버에서 최신 메시지 한 개를 요청
+        .then(response => response.json())
+        .then(message => {
+            const chatBox = document.getElementById('chat-box');
+            const messageTime = new Date(message.created_at);
+            if (!lastFetchedTime || messageTime > lastFetchedTime) {
+                // 새로운 메시지를 화면에 추가
+                const messageDiv = document.createElement('div');
+                messageDiv.textContent = `${message.username} : ${message.message} ---- (${messageTime.toLocaleString()})`;
+                chatBox.appendChild(messageDiv);
+
+                updateChatBoxLine();
+                lastFetchedTime = messageTime;
+            }
         })
         .catch(error => console.error("데이터 가져오기 오류:", error));
 }
-setInterval(fetchData, 1000);
+setInterval(fetchLatestMessage, 1000);
+initChatBox();
+setTimeout(() => {
+    updateChatBoxLine();  // 1초 후에 최신 메시지를 가져오는 함수 실행
+}, 100);
