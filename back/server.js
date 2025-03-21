@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const path = require('path');
 
 const app = express();
 app.use(express.json());
@@ -23,10 +24,9 @@ db.connect((err) => {
 });
 
 // 루트 경로 추가
-const path = require('path');
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, '..', 'front')));
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, '/front/chat.html'));
+    res.sendFile(path.join(__dirname, '..', 'front', 'chat.html'));
 });
 
 
