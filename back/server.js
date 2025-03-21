@@ -26,7 +26,7 @@ db.connect((err) => {
 const path = require('path');
 app.use(express.static(path.join(__dirname)));
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, 'Chat.html'));
+    res.sendFile(path.join(__dirname, '/front/chat.html'));
 });
 
 
