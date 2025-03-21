@@ -77,7 +77,8 @@ function fetchLatestMessage() {
         })
         .catch(error => console.error("데이터 가져오기 오류:", error));
 }
-setInterval(fetchLatestMessage, 1000);
+setInterval(fetchLatestMessage, 500);
+
 initChatBox();
 setTimeout(() => {
     updateChatBoxLine();  // 1초 후에 최신 메시지를 가져오는 함수 실행
