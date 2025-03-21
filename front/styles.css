@@ -18,10 +18,12 @@ body.dark-mode .chat-container {
     border-color: #444;
 }
 .chat-box {
-    height: 300px;
-    overflow-y: auto;
-    border-bottom: 1px solid #ddd;
+    width: 480px;
+    height: 500px;
+    border: 1px solid #ccc;
+    overflow-y: auto;  /* 세로로 스크롤이 가능하도록 설정 */
     padding: 10px;
+    margin-bottom: 10px;
 }
 input {
     width: 96%;
