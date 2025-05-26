@@ -21,7 +21,7 @@ function sendMessage() {
     const message = document.getElementById('message-input').value;
 
     // 서버로 데이터 전송
-    fetch("http://3.35.204.105:3000/messages", {
+    fetch("http://13.124.181.154:3000/messages", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -40,10 +40,14 @@ function sendMessage() {
 }
 
 function initChatBox() {
-    fetch("http://3.35.204.105:3000/getmessages")  // 백엔드 서버에 요청
+    console.log("1");
+
+    fetch("http://13.124.181.154:3000/getmessages")  // 백엔드 서버에 요청
         .then(response => response.json())
         .then(data => {
             const chatBox = document.getElementById("chat-box");
+            console.log("2");
+
             data.reverse().forEach(message => {
                 const messageDiv = document.createElement("div");
                 messageDiv.textContent = `${message.username} : ${message.message} ---- (${new Date(message.created_at).toLocaleString()})`;
@@ -51,7 +55,7 @@ function initChatBox() {
             });
         })
         .catch(error => console.error("데이터 가져오기 오류:", error));
-    fetch("http://3.35.204.105:3000/getlatestmessage")
+    fetch("http://13.124.181.154:3000/getlatestmessage")
         .then(response => response.json())
         .then(message => {
             lastFetchedTime = new Date(message.created_at);
@@ -60,7 +64,7 @@ function initChatBox() {
 
 let lastFetchedTime = null;
 function fetchLatestMessage() {
-    fetch("http://3.35.204.105:3000/getlatestmessage")  // 서버에서 최신 메시지 한 개를 요청
+    fetch("http://13.124.181.154:3000/getlatestmessage")  // 서버에서 최신 메시지 한 개를 요청
         .then(response => response.json())
         .then(message => {
             const chatBox = document.getElementById('chat-box');

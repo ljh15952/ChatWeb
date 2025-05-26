@@ -9,7 +9,7 @@ app.use(cors());  // CORS 허용
 
 // MySQL 연결
 const db = mysql.createConnection({
-    host: "3.35.204.105",
+    host: "13.124.181.154",
     user: "root",
     password: "1234",
     database: "chat",
@@ -42,7 +42,7 @@ app.get("/getmessages", (req, res) => {
     });
 });
 
-// ✅ 메시지 추가 API
+// 메시지 추가 API
 app.post("/messages", (req, res) => {
     const { username, message } = req.body;
     if (!username || !message) {
@@ -72,5 +72,5 @@ app.get("/getlatestmessage", (req, res) => {
 
 // 서버 실행
 app.listen(3000, () => {
-    console.log("서버 실행 중: http://3.35.204.105:3000");
+    console.log("서버 실행 중: http://13.124.181.154:3000");
 });
