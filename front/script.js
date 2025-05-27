@@ -1,5 +1,8 @@
+//
+// 기본 설정
 let me = "익명" + Math.random().toString(36).substring(2, 8);  // 36진법을 사용하여 짧은 문자열을 생성
 
+// PC환경에서 엔터로 메세지 입력
 document.getElementById('message-input').addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
         event.preventDefault(); // 기본 Enter 동작(줄 바꿈)을 방지
@@ -7,15 +10,24 @@ document.getElementById('message-input').addEventListener('keydown', (event) => 
     }
 });
 
+// 다크모드 전환
 document.getElementById("theme-toggle").addEventListener("click", function () {
     document.body.classList.toggle("dark-mode");
 });
+//
 
+// 스크롤 제일 밑으로
 function updateChatBoxLine() {
     const chatBox = document.getElementById("chat-box");
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+/*
+메세지 전송
+이미지 + 메세지 같이 전송 가능
+서버 DB에 올리는 작업만 함
+보낸 메세지를 프론트에 띄우는 작업X
+*/
 function sendMessage() {
     const username = me;
     const message = document.getElementById('message-input').value.trim();
@@ -62,8 +74,13 @@ function sendMessage() {
     }
 
 }
-
+/*
+initChatBox함수랑
+fetchLatestMessage함수
+서버에서 데이터 받아와서 프론트에 적용하는 부분이 같은데 최적화 귀찮
+*/
 function initChatBox() {
+    updateChatBoxLine();
     fetch("http://3.39.59.9:3000/getmessages")  // 백엔드 서버에 요청
         .then(response => response.json())
         .then(data => {
@@ -76,7 +93,6 @@ function initChatBox() {
                 if (message.type === 'image') {
                     const img = document.createElement("img");
                     img.src = `http://3.39.59.9:3000${message.message}`;
-                    img.style.maxWidth = "200px";
                     messageDiv.appendChild(img);
                 } else {
                     // 텍스트 메시지일 때
@@ -112,7 +128,6 @@ function fetchLatestMessage() {
                 if (message.type === 'image') {
                     const img = document.createElement("img");
                     img.src = `http://3.39.59.9:3000${message.message}`;
-                    img.style.maxWidth = "200px";
                     messageDiv.appendChild(img);
                 } else {
                     // 텍스트 메시지일 때
