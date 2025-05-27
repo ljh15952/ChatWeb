@@ -1,15 +1,26 @@
 const express = require("express");
-const mysql = require("mysql2");
+const multer = require("multer");
 const cors = require("cors");
-const path = require('path');
+const path = require("path");
+const fs = require("fs");
+const mysql = require("mysql2");
 
 const app = express();
 app.use(express.json());
 app.use(cors());  // CORS 허용
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+if (!fs.existsSync("uploads")) fs.mkdirSync("uploads");
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, "uploads/"),
+    filename: (req, file, cb) => cb(null, Date.now() + "_" + file.originalname)
+});
+const upload = multer({ storage });
 
 // MySQL 연결
 const db = mysql.createConnection({
-    host: "13.124.181.154",
+    host: "3.39.59.9",
     user: "root",
     password: "1234",
     database: "chat",
@@ -30,6 +41,20 @@ app.get("/", (req, res) => {
 });
 
 
+// 이미지 업로드 + DB 저장
+app.post("/uploadImage", upload.single("image"), (req, res) => {
+    const username = req.body.username;
+    if (!req.file || !username) {
+        return res.status(400).json({ error: "이미지와 username 필수" });
+    }
+    const imagePath = "/uploads/" + req.file.filename;
+    const query = "INSERT INTO messages (username, type, message) VALUES (?, 'image', ?)";
+    db.query(query, [username, imagePath], (err) => {
+        if (err) return res.status(500).json({ error: "DB 오류" });
+        res.json({ success: true, path: imagePath });
+    });
+});
+
 // 데이터 조회 API
 app.get("/getmessages", (req, res) => {
     const sql = "SELECT * FROM messages ORDER BY created_at DESC";
@@ -49,7 +74,8 @@ app.post("/messages", (req, res) => {
         return res.status(400).json({ error: "username과 message는 필수입니다." });
     }
 
-    const sql = "INSERT INTO messages (username, message) VALUES (?, ?)";
+    const sql = "INSERT INTO messages (username, type, message) VALUES (?, 'text', ?)";
+
     db.query(sql, [username, message], (err, results) => {
         if (err) {
             return res.status(500).json({ error: "데이터 삽입 실패" });
@@ -72,5 +98,5 @@ app.get("/getlatestmessage", (req, res) => {
 
 // 서버 실행
 app.listen(3000, () => {
-    console.log("서버 실행 중: http://13.124.181.154:3000");
+    console.log("서버 실행 중: http://3.39.59.9:3000");
 });
