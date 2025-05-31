@@ -20,7 +20,7 @@ const upload = multer({ storage });
 
 // MySQL 연결
 const db = mysql.createConnection({
-    host: "3.39.59.9",
+    host: "15.164.134.227",
     user: "root",
     password: "1234",
     database: "chat",
@@ -98,5 +98,5 @@ app.get("/getlatestmessage", (req, res) => {
 
 // 서버 실행
 app.listen(3000, () => {
-    console.log("서버 실행 중: http://3.39.59.9:3000");
+    console.log("서버 실행 중: http://15.164.134.227:3000");
 });

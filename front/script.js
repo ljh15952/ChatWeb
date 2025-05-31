@@ -39,7 +39,7 @@ function sendMessage() {
         formData.append("image", file);
         formData.append("username", username);
 
-        fetch("http://3.39.59.9:3000/uploadImage", {
+        fetch("http://15.164.134.227:3000/uploadImage", {
             method: "POST",
             body: formData,
         })
@@ -55,7 +55,7 @@ function sendMessage() {
     }
 
     if (message) {
-        fetch("http://3.39.59.9:3000/messages", {
+        fetch("http://15.164.134.227:3000/messages", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -81,7 +81,7 @@ fetchLatestMessage함수
 */
 function initChatBox() {
     updateChatBoxLine();
-    fetch("http://3.39.59.9:3000/getmessages")  // 백엔드 서버에 요청
+    fetch("http://15.164.134.227:3000/getmessages")  // 백엔드 서버에 요청
         .then(response => response.json())
         .then(data => {
             const chatBox = document.getElementById("chat-box");
@@ -92,7 +92,7 @@ function initChatBox() {
 
                 if (message.type === 'image') {
                     const img = document.createElement("img");
-                    img.src = `http://3.39.59.9:3000${message.message}`;
+                    img.src = `http://15.164.134.227:3000${message.message}`;
                     messageDiv.appendChild(img);
                 } else {
                     // 텍스트 메시지일 때
@@ -105,7 +105,7 @@ function initChatBox() {
         })
         .catch(error => console.error("데이터 가져오기 오류:", error));
 
-    fetch("http://3.39.59.9:3000/getlatestmessage")
+    fetch("http://15.164.134.227:3000/getlatestmessage")
         .then(response => response.json())
         .then(message => {
             lastFetchedTime = new Date(message.created_at);
@@ -114,7 +114,7 @@ function initChatBox() {
 
 let lastFetchedTime = null;
 function fetchLatestMessage() {
-    fetch("http://3.39.59.9:3000/getlatestmessage")  // 서버에서 최신 메시지 한 개를 요청
+    fetch("http://15.164.134.227:3000/getlatestmessage")  // 서버에서 최신 메시지 한 개를 요청
         .then(response => response.json())
         .then(message => {
             const chatBox = document.getElementById('chat-box');
@@ -127,7 +127,7 @@ function fetchLatestMessage() {
 
                 if (message.type === 'image') {
                     const img = document.createElement("img");
-                    img.src = `http://3.39.59.9:3000${message.message}`;
+                    img.src = `http://15.164.134.227:3000${message.message}`;
                     messageDiv.appendChild(img);
                 } else {
                     // 텍스트 메시지일 때
