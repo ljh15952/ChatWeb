@@ -126,6 +126,23 @@ app.get("/getlatestmessage", (req, res) => {
     });
 });
 
+app.get("/getmessagesafter", (req, res) => {
+    const after = req.query.after;
+
+    if (!after) {
+        return res.status(400).json({ error: "after 파라미터가 필요합니다." });
+    }
+
+    const sql = "SELECT * FROM messages WHERE created_at > ? ORDER BY created_at ASC";
+    db.query(sql, [after], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "메시지 조회 실패" });
+        }
+        res.json(results);
+    });
+});
+
 // 서버 실행
 app.listen(3000, () => {
     console.log("서버 실행 중: http://15.164.134.227:3000");

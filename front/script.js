@@ -34,7 +34,7 @@ document.getElementById("reset-chat").addEventListener("click", () => {
         .then((data) => {
             alert("채팅이 초기화되었습니다.");
             // 프론트에서 일단 다 없에고 서버에도 DB날리니 새로고침해도 초기화처럼 보일 듯?
-            document.getElementById("chat-box").innerHTML = ""; 
+            document.getElementById("chat-box").innerHTML = "";
         })
         .catch((err) => {
             console.error("초기화 실패:", err);
@@ -107,19 +107,25 @@ function sendMessage() {
     }
 
 }
-/*
-initChatBox함수랑
-fetchLatestMessage함수
-서버에서 데이터 받아와서 프론트에 적용하는 부분이 같은데 최적화 귀찮
-*/
-function initChatBox() {
-    updateChatBoxLine();
-    fetch("http://15.164.134.227:3000/getmessages")  // 백엔드 서버에 요청
+
+// 타임 스탬프 써서 처음부터 다 가져오기 추가되는것도 함수 하나로만
+let lastFetchedTime = null;
+function fetchMessages() {
+    const afterParam = lastFetchedTime ? lastFetchedTime.toISOString() : "";
+    const url = lastFetchedTime
+        ? `http://15.164.134.227:3000/getmessagesafter?after=${encodeURIComponent(afterParam)}`
+        : `http://15.164.134.227:3000/getmessages`;
+
+    fetch(url)
         .then(response => response.json())
-        .then(data => {
+        .then(messages => {
+            if (!messages || messages.length === 0) return;
+
             const chatBox = document.getElementById("chat-box");
 
-            data.reverse().forEach(message => {
+            messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+            messages.forEach(message => {
                 const messageDiv = document.createElement("div");
                 messageDiv.innerHTML = `<b>${message.username}</b> : `;
 
@@ -127,58 +133,25 @@ function initChatBox() {
                     const img = document.createElement("img");
                     img.src = `http://15.164.134.227:3000${message.message}`;
                     messageDiv.appendChild(img);
+                    console.log("1");
                 } else {
-                    // 텍스트 메시지일 때
-                    messageDiv.innerHTML += `${message.message}`;
+                    messageDiv.innerHTML += message.message;
+                    console.log("2");
                 }
 
                 messageDiv.innerHTML += ` ---- (${new Date(message.created_at).toLocaleString()})`;
                 chatBox.appendChild(messageDiv);
             });
-        })
-        .catch(error => console.error("데이터 가져오기 오류:", error));
 
-    fetch("http://15.164.134.227:3000/getlatestmessage")
-        .then(response => response.json())
-        .then(message => {
-            lastFetchedTime = new Date(message.created_at);
-        });
-}
+            // 가장 마지막 메시지 시간 갱신
+            lastFetchedTime = new Date(messages[messages.length - 1].created_at);
 
-let lastFetchedTime = null;
-function fetchLatestMessage() {
-    fetch("http://15.164.134.227:3000/getlatestmessage")  // 서버에서 최신 메시지 한 개를 요청
-        .then(response => response.json())
-        .then(message => {
-            const chatBox = document.getElementById('chat-box');
-            const messageTime = new Date(message.created_at);
-
-            if (!lastFetchedTime || messageTime > lastFetchedTime) {
-                // 새로운 메시지를 화면에 추가
-                const messageDiv = document.createElement("div");
-                messageDiv.innerHTML = `<b>${message.username}</b> : `;
-
-                if (message.type === 'image') {
-                    const img = document.createElement("img");
-                    img.src = `http://15.164.134.227:3000${message.message}`;
-                    messageDiv.appendChild(img);
-                } else {
-                    // 텍스트 메시지일 때
-                    messageDiv.innerHTML += `${message.message}`;
-                }
-
-                messageDiv.innerHTML += ` ---- (${new Date(message.created_at).toLocaleString()})`;
-                chatBox.appendChild(messageDiv);
-
-                updateChatBoxLine();
-                lastFetchedTime = messageTime;
-            }
+            updateChatBoxLine();
         })
         .catch(error => console.error("데이터 가져오기 오류:", error));
 }
-setInterval(fetchLatestMessage, 500);
 
-initChatBox();
-setTimeout(() => {
-    updateChatBoxLine();  // 1초 후에 최신 메시지를 가져오는 함수 실행
-}, 100);
+fetchMessages();
+
+// 0.5초마다 새 메시지 확인
+setInterval(fetchMessages, 500);
