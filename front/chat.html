@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>채팅방</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="chat-container">
-        <button id="theme-toggle">다크 모드</button>
+        <div class="top-buttons">
+            <button id="theme-toggle">다크 모드</button>
+            <button id="reset-chat">초기화</button>
+        </div>
         <div class="chat-box" id="chat-box"></div>
         <input type="file" id="image-input" accept="image/*" />
         <input type="text" id="message-input" placeholder="텍스트 입력">
@@ -17,4 +22,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

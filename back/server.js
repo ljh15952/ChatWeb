@@ -55,6 +55,36 @@ app.post("/uploadImage", upload.single("image"), (req, res) => {
     });
 });
 
+app.delete("/reset", (req, res) => {
+    const uploadsDir = path.join(__dirname, "uploads");
+
+    // 1. DB에서 메시지 전체 삭제
+    const sql = "DELETE FROM messages";
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.error("DB 초기화 실패:", err);
+            return res.status(500).json({ error: "DB 초기화 실패" });
+        }
+
+        // 2. uploads 폴더 내부 파일 삭제
+        fs.readdir(uploadsDir, (err, files) => {
+            if (err) {
+                console.error("uploads 폴더 읽기 실패:", err);
+                return res.status(500).json({ error: "업로드 파일 삭제 실패" });
+            }
+
+            for (const file of files) {
+                fs.unlink(path.join(uploadsDir, file), (err) => {
+                    if (err) console.error(`파일 삭제 실패: ${file}`, err);
+                });
+            }
+
+            // 3. 완료 응답
+            return res.json({ success: true, message: "DB 및 업로드 파일 초기화 완료" });
+        });
+    });
+});
+
 // 데이터 조회 API
 app.get("/getmessages", (req, res) => {
     const sql = "SELECT * FROM messages ORDER BY created_at DESC";

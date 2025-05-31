@@ -10,6 +10,15 @@ body.dark-mode {
     color: #ffffff;
 }
 
+.top-buttons {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.top-buttons button {
+    flex: 1;
+}
+
 /* 채팅 컨테이너: 화면 크기에 따라 가로/세로 확대 */
 .chat-container {
     display: flex;

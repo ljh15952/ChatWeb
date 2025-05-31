@@ -20,6 +20,27 @@ document.getElementById('message-input').addEventListener('keydown', (event) => 
     }
 });
 
+// 초기화 버튼
+document.getElementById("reset-chat").addEventListener("click", () => {
+    if (!confirm("정말 모든 채팅을 초기화하시겠습니까?")) return;
+
+    fetch("http://15.164.134.227:3000/reset", {
+        method: "DELETE"
+    })
+        .then((res) => {
+            if (!res.ok) throw new Error("서버 응답 오류");
+            return res.json();
+        })
+        .then((data) => {
+            alert("채팅이 초기화되었습니다.");
+            // 프론트에서 일단 다 없에고 서버에도 DB날리니 새로고침해도 초기화처럼 보일 듯?
+            document.getElementById("chat-box").innerHTML = ""; 
+        })
+        .catch((err) => {
+            console.error("초기화 실패:", err);
+            alert("초기화 중 오류가 발생했습니다.");
+        });
+});
 
 
 // 다크모드 전환
