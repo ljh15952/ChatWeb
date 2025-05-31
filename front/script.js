@@ -1,4 +1,3 @@
-//
 // 기본 설정
 //let me = "익명" + Math.random().toString(36).substring(2, 8);  // 36진법을 사용하여 짧은 문자열을 생성
 let me = "empty!!"
@@ -14,7 +13,6 @@ fetch("https://api.ipify.org?format=json")
 // PC환경에서 엔터로 메세지 입력
 document.getElementById('message-input').addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
-        console.log("QWE");
         event.preventDefault();
         sendMessage();
     }
@@ -33,7 +31,7 @@ document.getElementById("reset-chat").addEventListener("click", () => {
         })
         .then((data) => {
             alert("채팅이 초기화되었습니다.");
-            // 프론트에서 일단 다 없에고 서버에도 DB날리니 새로고침해도 초기화처럼 보일 듯?
+            // 프론트에서 일단 다 없에고 서버에도 DB날리니 새로고침해도 초기화처럼
             document.getElementById("chat-box").innerHTML = "";
         })
         .catch((err) => {
@@ -47,13 +45,27 @@ document.getElementById("reset-chat").addEventListener("click", () => {
 document.getElementById("theme-toggle").addEventListener("click", function () {
     document.body.classList.toggle("dark-mode");
 });
-//
+
 
 // 스크롤 제일 밑으로
 function updateChatBoxLine() {
     const chatBox = document.getElementById("chat-box");
     chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+// 이미지 클릭 확대
+document.addEventListener("click", function (e) {
+    if (e.target.tagName === "IMG" && e.target.closest("#chat-box")) {
+        const modal = document.getElementById("image-modal");
+        const modalImg = document.getElementById("modal-img");
+        modalImg.src = e.target.src;
+        modal.style.display = "flex";
+    }
+});
+
+document.getElementById("image-modal").addEventListener("click", function () {
+    this.style.display = "none";
+});
 
 /*
 메세지 전송
@@ -66,6 +78,7 @@ function sendMessage() {
     const message = document.getElementById('message-input').value.trim();
     const imageInput = document.getElementById("image-input");
     const file = imageInput.files[0];
+
 
     if (file) {
         const formData = new FormData();
@@ -105,7 +118,6 @@ function sendMessage() {
             });
         document.getElementById('message-input').value = '';
     }
-
 }
 
 // 타임 스탬프 써서 처음부터 다 가져오기 추가되는것도 함수 하나로만
@@ -119,7 +131,8 @@ function fetchMessages() {
     fetch(url)
         .then(response => response.json())
         .then(messages => {
-            if (!messages || messages.length === 0) return;
+            if (!messages || messages.length === 0) 
+                return;
 
             const chatBox = document.getElementById("chat-box");
 
@@ -133,10 +146,9 @@ function fetchMessages() {
                     const img = document.createElement("img");
                     img.src = `http://15.164.134.227:3000${message.message}`;
                     messageDiv.appendChild(img);
-                    console.log("1");
-                } else {
+                }
+                if (message.type === 'text') {
                     messageDiv.innerHTML += message.message;
-                    console.log("2");
                 }
 
                 messageDiv.innerHTML += ` ---- (${new Date(message.created_at).toLocaleString()})`;
