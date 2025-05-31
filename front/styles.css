@@ -41,9 +41,9 @@ body.dark-mode .chat-container {
 }
 .chat-box img {
     display: block;
-    width: 100%;         /* 컨테이너 가로폭 전체 사용 */
+    width: 20%;
     height: auto;
-    margin: 8px 0;
+    margin: 8px;
     border-radius: 5px;
     object-fit: contain;
 }

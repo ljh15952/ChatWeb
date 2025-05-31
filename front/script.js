@@ -1,14 +1,26 @@
 //
 // 기본 설정
-let me = "익명" + Math.random().toString(36).substring(2, 8);  // 36진법을 사용하여 짧은 문자열을 생성
+//let me = "익명" + Math.random().toString(36).substring(2, 8);  // 36진법을 사용하여 짧은 문자열을 생성
+let me = "empty!!"
+fetch("https://api.ipify.org?format=json")
+    .then(res => res.json())
+    .then(data => {
+        me = data.ip;
+    })
+    .catch(err => {
+        console.error("IP 가져오기 실패:", err);
+    });
 
 // PC환경에서 엔터로 메세지 입력
 document.getElementById('message-input').addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
-        event.preventDefault(); // 기본 Enter 동작(줄 바꿈)을 방지
-        sendMessage(); // 메시지 전송 함수 호출
+        console.log("QWE");
+        event.preventDefault();
+        sendMessage();
     }
 });
+
+
 
 // 다크모드 전환
 document.getElementById("theme-toggle").addEventListener("click", function () {
@@ -119,7 +131,7 @@ function fetchLatestMessage() {
         .then(message => {
             const chatBox = document.getElementById('chat-box');
             const messageTime = new Date(message.created_at);
-            
+
             if (!lastFetchedTime || messageTime > lastFetchedTime) {
                 // 새로운 메시지를 화면에 추가
                 const messageDiv = document.createElement("div");
