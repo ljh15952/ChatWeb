@@ -81,6 +81,7 @@ function sendMessage() {
 
 
     if (file) {
+        imageInput.value = ""; // 선택 초기화
         const formData = new FormData();
         formData.append("image", file);
         formData.append("username", username);
@@ -92,7 +93,7 @@ function sendMessage() {
             .then((res) => res.json())
             .then((data) => {
                 if (data.path) {
-                    imageInput.value = ""; // 선택 초기화
+                    console.log("이미지 DB 전송");
                 }
             })
             .catch((err) => {
